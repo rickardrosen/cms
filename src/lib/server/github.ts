@@ -32,7 +32,7 @@ async function getTree(tree_sha: string) {
   return res.data.tree;
 }
 
-export async function getDocsTree() {
+export async function getDocsTree(): Promise<[{ path: string; type: string }]> {
   const masterTreeSha = await getBranchTreeSha('master');
   const masterTree = await getTree(masterTreeSha);
   const docsNode = masterTree.find((x: { path: string }) => x.path === 'docs');

@@ -1,6 +1,7 @@
 <script>
+  import Tree from './Tree.svelte'
   /** @type {import('./$types').LayoutData} */
-  export let data;
+  export let data
 </script>
 
 <main>
@@ -10,13 +11,5 @@
 
 <aside>
   <h2>Files</h2>
-  <ul>
-    {#each data.files as file}
-      <li>
-        <a href="/file/{file}">
-          {file}
-        </a>
-      </li>
-    {/each}
-  </ul>
+<Tree {data} />
 </aside>
