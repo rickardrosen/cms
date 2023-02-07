@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import Tree from './Tree.svelte'
   /** @type {import('./$types').LayoutData} */
   export let data

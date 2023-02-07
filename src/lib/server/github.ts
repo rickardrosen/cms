@@ -12,6 +12,21 @@ const app = new App({ appId, privateKey });
 //const { data: slug } = await app.octokit.rest.apps.getAuthenticated();
 const octokit = await app.getInstallationOctokit(parseInt(installationId));
 
+export interface GitTreeNode {
+  path: string;
+  mode: number;
+  type: string;
+  size: number;
+  sha: string;
+  url: string;
+}
+
+interface GitTree {
+  sha: string;
+  url: string;
+  tree: GitTreeNode[];
+}
+
 async function getBranchTreeSha(branch: string) {
   const res = await octokit.request(`GET /repos/{owner}/{repo}/branches/{branch}`, {
     owner,
@@ -19,10 +34,9 @@ async function getBranchTreeSha(branch: string) {
     branch
   });
   return res.data['commit']['commit']['tree']['sha'];
-  // const master = await octokit.request('GET /repos/academicwork/handbook/branches/master', headers=key)
 }
 
-async function getTree(tree_sha: string) {
+async function getTree(tree_sha: string): Promise<GitTreeNode[]> {
   const res = await octokit.request('GET /repos/{owner}/{repo}/git/trees/{tree_sha}{?recursive}', {
     owner,
     repo,
@@ -32,10 +46,12 @@ async function getTree(tree_sha: string) {
   return res.data.tree;
 }
 
-export async function getDocsTree(): Promise<[{ path: string; type: string }]> {
+export async function getTreeByName(tree = 'docs'): Promise<GitTreeNode[]> {
   const masterTreeSha = await getBranchTreeSha('master');
   const masterTree = await getTree(masterTreeSha);
-  const docsNode = masterTree.find((x: { path: string }) => x.path === 'docs');
-  const docsTree = await getTree(docsNode.sha);
-  return docsTree;
+  const treeNode = masterTree.find((x) => x.path === tree);
+  if (!treeNode) {
+    throw new Error(tree + ' not found');
+  }
+  return await getTree(treeNode.sha);
 }

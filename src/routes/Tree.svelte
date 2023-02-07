@@ -29,8 +29,9 @@
 			{/if}
 		{:else}
 			<span>
-				<span class="no-arrow"/>
+				<a href='/' class="no-arrow">
 				{name}
+        </a>
 			</span>
 		{/if}
 	</li>

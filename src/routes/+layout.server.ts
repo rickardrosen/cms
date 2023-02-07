@@ -1,36 +1,29 @@
-import * as github from '$lib/server/github';
+import { getTreeByName } from '$lib/server/github';
 
 interface TreeNode {
   name: string;
-  //type: string
-  children?: TreeNode[];
-}
-/** @type {import('./$types').LayoutServerLoad} */
-export async function load() {
-  const gitTree = await github.getDocsTree();
-  //const files = gitTree.filter((x) => x.type === 'blob');
-  //if (!files) return;
-  var tree: { [key: string]: {} } = {};
-  gitTree.forEach(({ path }) => {
-    let currentNode = tree;
-    path.split('/').forEach((segment) => {
-      if (currentNode[segment] === undefined) {
-        currentNode[segment] = {};
-      }
-      currentNode = currentNode[segment];
-    });
-  });
-  const jsonTree: TreeNode = { name: 'Root', children: toJsonTree(tree) };
-  console.log('%j', jsonTree);
-  return jsonTree;
+  type?: string
+  path?: string
+  children: TreeNode[];
 }
 
-function toJsonTree(tree: { [key: string]: {} }) {
-  return Object.keys(tree).map((name) => {
-    let n: TreeNode = { name };
-    if (Object.keys(tree[name]).length > 0) {
-      n.children = toJsonTree(tree[name]);
-    }
-    return n;
-  });
+/** @type {import('./$types').LayoutServerLoad} */
+export async function load() {
+  const gitTree = await getTreeByName('docs')
+  const tree: TreeNode = {
+    name: 'Root',
+    children:[]
+  }
+  tree.children = gitTree.reduce((r: TreeNode[], n) => {
+      n.path.split('/').reduce((childNodes: TreeNode[], name) => {
+          let child = childNodes.find(n => n.name === name);
+          if (!child) {
+            childNodes.push(child = { name, children: [] });
+          }
+          return child.children;
+      }, r);
+      return r;
+  }, [])
+  console.log(tree)
+  return tree
 }
