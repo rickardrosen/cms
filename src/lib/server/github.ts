@@ -4,6 +4,7 @@ import {
   GITHUB_API_PRIVATE_KEY
 } from '$env/static/private';
 import { App } from 'octokit';
+import type { Endpoints } from '@octokit/types';
 
 const owner = 'academicwork';
 const repo = 'handbook';
@@ -21,11 +22,7 @@ export interface GitTreeNode {
   url: string;
 }
 
-interface GitTree {
-  sha: string;
-  url: string;
-  tree: GitTreeNode[];
-}
+type GetContentResponse = Endpoints['GET /repos/{owner}/{repo}/contents/{path}']['response'];
 
 async function getBranchTreeSha(branch: string) {
   const res = await octokit.request(`GET /repos/{owner}/{repo}/branches/{branch}`, {
@@ -54,4 +51,13 @@ export async function getTreeByName(tree = 'docs'): Promise<GitTreeNode[]> {
     throw new Error(tree + ' not found');
   }
   return await getTree(treeNode.sha);
+}
+
+export async function getContent(path: string): Promise<GetContentResponse['data']> {
+  const res = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+    owner,
+    repo,
+    path
+  });
+  return res.data;
 }

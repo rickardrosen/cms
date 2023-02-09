@@ -7,7 +7,7 @@
 <script>
 //	import { slide } from 'svelte/transition'
 	export let data
-	const {name, children} = data
+	const {name, path, children} = data
 
 	let expanded = _expansionState[name] || false
 	const toggleExpansion = () => {
@@ -17,7 +17,7 @@
 </script>
 <ul><!-- transition:slide -->
 	<li>
-		{#if children}
+		{#if children.length}
 			<span on:click={toggleExpansion}>
 				<span class="arrow" class:arrowDown>&#x25b6</span>
 				{name}
@@ -29,7 +29,7 @@
 			{/if}
 		{:else}
 			<span>
-				<a href='/' class="no-arrow">
+				<a href='/edit/{path}' class="no-arrow">
 				{name}
         </a>
 			</span>

@@ -11,4 +11,4 @@
 </script>
 
 <h1>stuff</h1>
-<div>{@html data}</div>
+<div>{@html JSON.stringify(data)}</div>
