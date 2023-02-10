@@ -25,6 +25,8 @@
 	"type": "module",
 	"dependencies": {
 		"@octokit/types": "^9.0.0",
+		"@types/marked": "^4.0.8",
+		"marked": "^4.2.12",
 		"octokit": "^2.0.13"
 	}
 }

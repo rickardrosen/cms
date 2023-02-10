@@ -29,7 +29,7 @@
 			{/if}
 		{:else}
 			<span>
-				<a href='/edit/{path}' class="no-arrow">
+				<a href='/view/{path}' class="no-arrow">
 				{name}
         </a>
 			</span>

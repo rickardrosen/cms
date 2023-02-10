@@ -54,7 +54,7 @@ export async function getTreeByName(tree = 'docs'): Promise<GitTreeNode[]> {
 }
 
 export async function getContent(path: string): Promise<GetContentResponse['data']> {
-  const res = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+  const res = await octokit.request('GET /repos/{owner}/{repo}/contents/docs/{path}', {
     owner,
     repo,
     path
