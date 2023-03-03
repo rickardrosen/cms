@@ -5,6 +5,7 @@ stdenv.mkDerivation {
   buildInputs = [
     nodejs-18_x
     nodePackages.typescript-language-server
+    nodePackages.svelte-language-server
   ];
   shellHook = ''
     export PATH="$PWD/node_modules/.bin/:$PATH"
