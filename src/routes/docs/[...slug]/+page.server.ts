@@ -9,6 +9,7 @@ export const load: PageServerLoad = async ({ params }) => {
 
   if ('content' in gitContent) {
     const { data, content } = matter(Buffer.from(gitContent.content, 'base64').toString());
+    console.log(data);
     return { data, content, sha: gitContent.sha };
   }
 };

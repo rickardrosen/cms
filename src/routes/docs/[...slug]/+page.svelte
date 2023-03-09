@@ -8,6 +8,7 @@
   $: {
     editor?.value(data.content ?? '')
     sha = data.sha ?? ''
+    frontMatter = data.data
   }
 	import { onDestroy, onMount } from 'svelte';
   //import "easymde/src/css/easymde.css"
@@ -82,6 +83,7 @@
     {#each Object.entries(frontMatter) as [key, value]}
     <input name={key} type="text" value={key} />
     <input name={value} type="text" value={value} />
+    <br />
 	  {/each}
     {/if}
     <input name="sha" type="text" bind:value={data.sha} />
