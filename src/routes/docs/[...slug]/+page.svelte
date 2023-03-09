@@ -1,8 +1,13 @@
 <script lang="ts">
-  import type { PageData } from './$types'
+  import type { ActionData, PageData } from './$types'
+  //import { enhance } from '$app/forms'
   export let data: PageData
+  export let form: ActionData
+  let sha = data.sha
+  let frontMatter = data.data
   $: {
-    editor?.value(data.md ?? '')
+    editor?.value(data.content ?? '')
+    sha = data.sha ?? ''
   }
 	import { onDestroy, onMount } from 'svelte';
   //import "easymde/src/css/easymde.css"
@@ -55,7 +60,7 @@
 			status: ['autosave', 'words'],
 			hideIcons: ['fullscreen', 'side-by-side'],
 		});
-  editor.value(data.md ?? '')
+  editor.value(data.content ?? '')
 	});
 	// Resetting the editor when clearing it
 	onDestroy(() => {
@@ -71,4 +76,19 @@
 	<title>Editor</title>
 </svelte:head>
 
-<div class="editor"><textarea bind:this={textArea} /></div>
+<div class="editor">
+  <form method="post">
+    {#if frontMatter}
+    {#each Object.entries(frontMatter) as [key, value]}
+    <input name={key} type="text" value={key} />
+    <input name={value} type="text" value={value} />
+	  {/each}
+    {/if}
+    <input name="sha" type="text" bind:value={data.sha} />
+    <textarea name="content" bind:this={textArea} />
+    <button type="submit" formaction="?/save">Save</button>
+  </form>
+  {#if form?.success}
+    <p>File commited successfully! 🥳</p>
+  {/if}
+</div>
