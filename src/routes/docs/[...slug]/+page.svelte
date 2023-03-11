@@ -8,7 +8,9 @@
   let frontMatter = data.data
   const availableTags = ['ADR', 'Process'];
   let tags = frontMatter.tags ?? []
-  console.log("TAGS:", tags)
+  let showCommitModal = false
+  let commitMessage = ''
+
   $: {
     editor?.value(data.content ?? '')
     sha = data.sha ?? ''
@@ -83,7 +85,7 @@
 </svelte:head>
 
 <div class="editor">
-  <form method="post">
+  <form method="post" id="content">
     <div>
     <label for="title">Title:</label>
     <input size="60" name="title" type="text" bind:value={frontMatter.title} />
@@ -95,9 +97,20 @@
     {/each}
     <input name="tags" type="hidden" bind:value={tags} />
     <textarea name="content" bind:this={textArea} />
-    <button type="submit" formaction="?/save">Save</button>
-    <input name="sha" type="text" bind:value={data.sha} />
+    <input name="sha" type="hidden" bind:value={data.sha} />
   </form>
+  <button disabled={showCommitModal} on:click="{() => showCommitModal = !showCommitModal}">
+    Save
+  </button>
+  {#if showCommitModal}
+	<input type="text" name="commitMessage" form="content" placeholder="Enter commit message..." size="50" bind:value={commitMessage}/>
+	<button type="submit" form="content" formaction="?/save" disabled={commitMessage.length === 0}>
+		Commit
+	</button>
+	<button type="button" on:click="{() => showCommitModal = !showCommitModal}">
+		Cancel
+	</button>
+  {/if}
   {#if form?.success}
     <p>File commited successfully! 🥳</p>
   {/if}
