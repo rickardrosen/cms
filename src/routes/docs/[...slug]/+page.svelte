@@ -1,15 +1,20 @@
 <script lang="ts">
   import type { ActionData, PageData } from './$types'
-  //import { enhance } from '$app/forms'
+
   export let data: PageData
   export let form: ActionData
+
   let sha = data.sha
   let frontMatter = data.data
+  const availableTags = ['ADR', 'Process'];
+  let tags = frontMatter.tags ?? []
+  console.log("TAGS:", tags)
   $: {
     editor?.value(data.content ?? '')
     sha = data.sha ?? ''
-    frontMatter = data.data
+    frontMatter = data.data ?? {}
   }
+
 	import { onDestroy, onMount } from 'svelte';
   //import "easymde/src/css/easymde.css"
 	//let showToolbar = true;
@@ -79,16 +84,19 @@
 
 <div class="editor">
   <form method="post">
-    {#if frontMatter}
-    {#each Object.entries(frontMatter) as [key, value]}
-    <input name={key} type="text" value={key} />
-    <input name={value} type="text" value={value} />
-    <br />
-	  {/each}
-    {/if}
-    <input name="sha" type="text" bind:value={data.sha} />
+    <div>
+    <label for="title">Title:</label>
+    <input size="60" name="title" type="text" bind:value={frontMatter.title} />
+    </div>
+    <span>Tags:</span>
+    {#each availableTags as tag}
+    <input type="checkbox" bind:group={tags} id="{tag}" name="{tag}" value="{tag}" checked="{tags.includes(tag)}">
+    <label for="{tag}">{tag}</label>
+    {/each}
+    <input name="tags" type="hidden" bind:value={tags} />
     <textarea name="content" bind:this={textArea} />
     <button type="submit" formaction="?/save">Save</button>
+    <input name="sha" type="text" bind:value={data.sha} />
   </form>
   {#if form?.success}
     <p>File commited successfully! 🥳</p>

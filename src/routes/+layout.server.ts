@@ -11,7 +11,7 @@ interface TreeNode {
 export async function load() {
 	const gitTree = await getTreeByName('docs');
 	const tree: TreeNode = {
-		name: 'Root',
+		name: 'docs',
 		children: []
 	};
 	tree.children = gitTree.reduce((r: TreeNode[], n) => {

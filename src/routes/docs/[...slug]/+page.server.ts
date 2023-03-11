@@ -16,13 +16,19 @@ export const load: PageServerLoad = async ({ params }) => {
 
 export const actions: Actions = {
   save: async ({ request }) => {
-    const { content, sha } = await request.formData().then((x) => {
+    const { content, data, sha } = await request.formData().then((x) => {
       return {
+        data: {
+          title: x.get('title') as string,
+          tags: x.getAll('tags') as string[]
+        },
         content: x.get('content') as string,
         sha: x.get('sha') as string
       };
     });
     const path = new URL(request.url).pathname.substring(1);
+    const file = matter.stringify(content, data);
+    console.log(data);
     const commit: Commit = {
       message: 'mess',
       committer: {
@@ -30,9 +36,8 @@ export const actions: Actions = {
         email: 'palle@kalle.commit'
       },
       sha,
-      content: Buffer.from(content).toString('base64')
+      content: Buffer.from(file).toString('base64')
     };
-    console.log('updating git with', commit);
     const res = await updateFile(path, commit);
     if (res.status < 300) {
       return { success: true, sha: res.data.commit.sha };

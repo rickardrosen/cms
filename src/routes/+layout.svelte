@@ -1,7 +1,10 @@
 <script lang="ts">
+	import { page } from "$app/stores";
   import Tree from './Tree.svelte'
   import type { LayoutData } from './$types'
   export let data: LayoutData
+  const p = $page.url.pathname.split('/').slice(1)
+  console.log(p)
 </script>
 
 <style>
@@ -51,7 +54,7 @@
   </main>
 
   <aside class="aside nav">
-    <Tree {data} />
+    <Tree {data} {p} />
   </aside>
   <aside class="aside aside-2">Aside 2</aside>
   <footer class="footer">Footer</footer>

@@ -6,10 +6,10 @@
 </script>
 <script>
 //	import { slide } from 'svelte/transition'
-	export let data
+	export let data, p
+  const [head, ...tail] = p
 	const {name, path, children} = data
-
-	let expanded = _expansionState[name] || false
+	let expanded = _expansionState[name] || head === name
 	const toggleExpansion = () => {
 		expanded = _expansionState[name] = !expanded
 	}
@@ -24,7 +24,7 @@
 			</span>
 			{#if expanded}
 				{#each children as child}
-					<svelte:self data={child} />
+					<svelte:self data={child} p={tail}/>
 				{/each}
 			{/if}
 		{:else}
