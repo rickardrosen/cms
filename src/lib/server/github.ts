@@ -30,19 +30,28 @@ export interface File {
   content: string;
 }
 
-export interface Commit {
-  message: string,
+export interface CommitMessage {
+  message: string;
   committer: {
-    name: string,
-    email: string
-  }
-  content: string
-  sha?: string
+    name: string;
+    email: string;
+  };
 }
 
-type GetContentResponse = Endpoints['GET /repos/{owner}/{repo}/contents/{path}']['response']
-//type GetCommitsResponse = Endpoints['GET /repos/{owner}/{repo}/commits']['response'];
-type PutContentResponse = Endpoints['PUT /repos/{owner}/{repo}/contents/{path}']['response']
+export interface Commit {
+  message: string;
+  committer: {
+    name: string;
+    email: string;
+  };
+  content: string;
+  sha?: string;
+}
+
+type GetContentResponse = Endpoints['GET /repos/{owner}/{repo}/contents/{path}']['response'];
+//type GetCommitsResponse = Endpoints['GET /repos/{owner}/{repo}/commits']['response']
+type PutContentResponse = Endpoints['PUT /repos/{owner}/{repo}/contents/{path}']['response'];
+type DeleteFileResponse = Endpoints['DELETE /repos/{owner}/{repo}/contents/{path}']['response'];
 
 async function getBranchTreeSha(branch: string) {
   const res = await octokit.request(`GET /repos/{owner}/{repo}/branches/{branch}`, {
@@ -74,19 +83,34 @@ export async function getTreeByName(tree = 'docs'): Promise<GitTreeNode[]> {
 }
 
 export async function getContent(path: string): Promise<GetContentResponse['data']> {
+  console.log('Getting:', path);
   const res = await octokit.request('GET /repos/{owner}/{repo}/contents/docs/{path}', {
     owner,
     repo,
     path
   });
-  return res.data
+  return res.data;
 }
 
 export async function updateFile(path: string, commit: Commit): Promise<PutContentResponse> {
-   return await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+  return await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
     owner,
     repo,
     path,
     ...commit
-  })
+  });
+}
+
+export async function deleteFile(
+  path: string,
+  sha: string,
+  message: CommitMessage
+): Promise<DeleteFileResponse> {
+  return await octokit.request('DELETE /repos/{owner}/{repo}/contents/{path}', {
+    owner,
+    repo,
+    path,
+    sha,
+    ...message
+  });
 }

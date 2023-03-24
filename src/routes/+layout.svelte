@@ -4,7 +4,6 @@
   import type { LayoutData } from './$types'
   export let data: LayoutData
   const p = $page.url.pathname.split('/').slice(1)
-  console.log(p)
 </script>
 
 <style>

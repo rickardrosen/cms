@@ -7,14 +7,22 @@
   let sha = data.sha
   let frontMatter = data.data
   const availableTags = ['ADR', 'Process'];
-  let tags = frontMatter.tags ?? []
+  let tags = frontMatter?.tags ?? []
   let showCommitModal = false
   let commitMessage = ''
+  let commitAction: "save" | "delete"
+  let action: string
 
   $: {
     editor?.value(data.content ?? '')
     sha = data.sha ?? ''
     frontMatter = data.data ?? {}
+  }
+
+  function submitAction(button) {
+    showCommitModal = !showCommitModal
+    console.log(showCommitModal)
+    commitAction = button.target.name
   }
 
 	import { onDestroy, onMount } from 'svelte';
@@ -99,12 +107,15 @@
     <textarea name="content" bind:this={textArea} />
     <input name="sha" type="hidden" bind:value={data.sha} />
   </form>
-  <button disabled={showCommitModal} on:click="{() => showCommitModal = !showCommitModal}">
+  <button name="save" disabled={showCommitModal} on:click="{submitAction}">
     Save
+  </button>
+  <button name="delete" disabled={showCommitModal} on:click="{submitAction}">
+    Delete
   </button>
   {#if showCommitModal}
 	<input type="text" name="commitMessage" form="content" placeholder="Enter commit message..." size="50" bind:value={commitMessage}/>
-	<button type="submit" form="content" formaction="?/save" disabled={commitMessage.length === 0}>
+	<button type="submit" form="content" formaction="?/{commitAction}" disabled={commitMessage.length === 0}>
 		Commit
 	</button>
 	<button type="button" on:click="{() => showCommitModal = !showCommitModal}">

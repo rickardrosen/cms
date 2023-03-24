@@ -1,33 +1,36 @@
-<script context="module">
+<script context="module" lang="ts">
 	// retain module scoped expansion state for each tree node
 	const _expansionState = {
 		/* treeNodeId: expanded <boolean> */
 	}
 </script>
-<script>
-//	import { slide } from 'svelte/transition'
+
+<script lang="ts">
+	//import { slide } from 'svelte/transition'
 	export let data, p
   const [head, ...tail] = p
-	const {name, path, children} = data
+	const {name, path, children, hidden} = data
+
 	let expanded = _expansionState[name] || head === name
 	const toggleExpansion = () => {
 		expanded = _expansionState[name] = !expanded
 	}
 	$: arrowDown = expanded
 </script>
+
 <ul><!-- transition:slide -->
 	<li>
 		{#if children.length}
 			<span on:click={toggleExpansion}>
 				<span class="arrow" class:arrowDown>&#x25b6</span>
-				{name}
-			</span>
+        <a href='/docs/{path}'>{name}</a>
+			  </span>
 			{#if expanded}
 				{#each children as child}
 					<svelte:self data={child} p={tail}/>
 				{/each}
 			{/if}
-		{:else}
+		{:else if !hidden}
 			<span>
 				<a href='/docs/{path}' class="no-arrow">
 				{name}
