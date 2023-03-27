@@ -4,6 +4,7 @@
   import type { LayoutData } from './$types'
   export let data: LayoutData
   const p = $page.url.pathname.split('/').slice(1)
+  const { tree } = data
 </script>
 
 <style>
@@ -53,7 +54,7 @@
   </main>
 
   <aside class="aside nav">
-    <Tree {data} {p} />
+    <Tree {tree} {p} />
   </aside>
   <aside class="aside aside-2">Aside 2</aside>
   <footer class="footer">Footer</footer>

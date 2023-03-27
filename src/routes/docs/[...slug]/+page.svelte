@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { ActionData, PageData } from './$types'
+  import { page } from '$app/stores';
 
   export let data: PageData
   export let form: ActionData
@@ -11,7 +12,6 @@
   let showCommitModal = false
   let commitMessage = ''
   let commitAction: "save" | "delete"
-  let action: string
 
   $: {
     editor?.value(data.content ?? '')
@@ -21,7 +21,6 @@
 
   function submitAction(button) {
     showCommitModal = !showCommitModal
-    console.log(showCommitModal)
     commitAction = button.target.name
   }
 
@@ -91,7 +90,7 @@
   <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
 	<title>Editor</title>
 </svelte:head>
-
+ {$page.url.pathname}
 <div class="editor">
   <form method="post" id="content">
     <div>

@@ -92,7 +92,7 @@ export async function getContent(path: string): Promise<GetContentResponse['data
   return res.data;
 }
 
-export async function updateFile(path: string, commit: Commit): Promise<PutContentResponse> {
+export async function createOrUpdateFile(path: string, commit: Commit): Promise<PutContentResponse> { 
   return await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
     owner,
     repo,

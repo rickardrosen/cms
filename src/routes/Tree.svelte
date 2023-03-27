@@ -7,9 +7,9 @@
 
 <script lang="ts">
 	//import { slide } from 'svelte/transition'
-	export let data, p
+	export let tree, p
   const [head, ...tail] = p
-	const {name, path, children, hidden} = data
+	const {name, path, children, hidden, index } = tree
 
 	let expanded = _expansionState[name] || head === name
 	const toggleExpansion = () => {
@@ -23,11 +23,11 @@
 		{#if children.length}
 			<span on:click={toggleExpansion}>
 				<span class="arrow" class:arrowDown>&#x25b6</span>
-        <a href='/docs/{path}'>{name}</a>
+        <a href='/docs/{index ? index : path}'>{name}</a>
 			  </span>
 			{#if expanded}
 				{#each children as child}
-					<svelte:self data={child} p={tail}/>
+					<svelte:self tree={child} p={tail}/>
 				{/each}
 			{/if}
 		{:else if !hidden}
