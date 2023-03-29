@@ -5,25 +5,50 @@
   export let data: PageData
   export let form: ActionData
 
-  let sha = data.sha
-  let frontMatter = data.data
   const availableTags = ['ADR', 'Process'];
-  let tags = frontMatter?.tags ?? []
+
+  let sha: string
+  let frontMatter
+  let tags
   let showCommitModal = false
   let commitMessage = ''
   let commitAction: "save" | "delete"
+  let currentNode: TreeNode
+  let crumbs = []
 
   $: {
+    tags = frontMatter?.tags ?? []
     editor?.value(data.content ?? '')
     sha = data.sha ?? ''
     frontMatter = data.data ?? {}
+    currentNode = decodeURI($page.url.pathname).split("/").slice(2).reduce((p: TreeNode, c) => {
+      if(p.children !== undefined && p.children.length > 0){
+        return p.children.find(x => x.name === c)
+      }
+    }, $page.data.tree)
+    crumbs = $page.url.pathname.split('/').slice(1).reduce((p, c, i) => {
+      let curr
+      if(i === 0){
+        curr = {
+          href: '',
+          name: ''
+        }
+      }else{
+        const { href, name } = p[i-1]
+        curr = {
+          href: `${href}/${c}`,
+          name: c
+        }
+      }
+      p.push(curr)
+      return p
+    }, []).slice(1)
   }
 
   function submitAction(button) {
     showCommitModal = !showCommitModal
     commitAction = button.target.name
   }
-
 	import { onDestroy, onMount } from 'svelte';
   //import "easymde/src/css/easymde.css"
 	//let showToolbar = true;
@@ -90,9 +115,20 @@
   <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
 	<title>Editor</title>
 </svelte:head>
- {$page.url.pathname}
-<div class="editor">
+<div>
+<ul>
+  {#each crumbs as crumb}
+  <li>{crumb.href}</li>
+  {/each}
+</ul>
+{#if currentNode.type === 'folder'}<button name="new">Add page</button>{/if}
+</div>
+<div class="editor" hidden={currentNode.type === 'folder'}>
   <form method="post" id="content">
+    <div>
+    <label for="name">Filename:</label>
+    <input size="60" name="name" disabled=true type="text" bind:value={currentNode.name} />
+    </div>
     <div>
     <label for="title">Title:</label>
     <input size="60" name="title" type="text" bind:value={frontMatter.title} />

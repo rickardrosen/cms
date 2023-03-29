@@ -1,8 +1,9 @@
 import { getTreeByName } from '$lib/server/github';
+import type { LayoutServerLoad } from './$types';
 
 interface TreeNode {
 	name: string;
-	type: string;
+	type?: string;
 	path: string;
 	children: TreeNode[];
 	hidden: boolean;
@@ -10,7 +11,7 @@ interface TreeNode {
 }
 
 /** @type {import('./$types').LayoutServerLoad} */
-export async function load({url}) {
+export const load: LayoutServerLoad = async ({ url }) => {
 	const gitTree = await getTreeByName('docs');
 	const tree: TreeNode = {
 		name: 'docs',
@@ -20,6 +21,7 @@ export async function load({url}) {
 		hidden: false,
     index:''
 	};
+
 	tree.children = gitTree.reduce((r: TreeNode[], n) => {
 		n.path.split('/').reduce((childNodes: TreeNode[], name) => {
 			let child = childNodes.find((n) => n.name === name);
@@ -29,7 +31,7 @@ export async function load({url}) {
 						name,
 						path: n.path,
 						children: [],
-						type: n.type === 'tree' ? 'folder' : 'file',
+						type: n.type === 'tree' ? 'folder': 'file',
 						hidden: false
 					})
 				);
@@ -42,19 +44,16 @@ export async function load({url}) {
 	const sectionIndex = (t: TreeNode) => {
 		for (let child of t.children) {
 			if (child.name.startsWith('index.md')) {
-				t.index = child.path;
+        //child.type = "folder"
 				child.hidden = true;
+        t.index = child.path
 			}
 			sectionIndex(child);
 		}
 		return t;
 	};
 
-  const currentNode = decodeURI(url.pathname).split("/").slice(2).reduce((p: any, c) => {
-    if(p.children !== undefined && p.children.length > 0){
-      return p.children.find(x => x.name === c)
-    }
-  }, tree)
+  const navTree = sectionIndex(tree)
 
-	return {tree: sectionIndex(tree), currentNode};
+	return {tree: navTree};
 }
