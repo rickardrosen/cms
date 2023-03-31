@@ -56,6 +56,5 @@ export const load: LayoutServerLoad = async () => {
 	};
 
   const navTree = sectionIndex(tree)
-
 	return {tree: navTree};
 }

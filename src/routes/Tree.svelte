@@ -1,4 +1,5 @@
 <script context="module" lang="ts">
+  import Button, { Label, Icon } from '@smui/button';
 	// retain module scoped expansion state for each tree node
 	const _expansionState = {
 		/* treeNodeId: expanded <boolean> */
@@ -23,7 +24,9 @@
 		{#if children.length}
 			<span on:click={toggleExpansion}>
 				<span class="arrow" class:arrowDown>&#x25b6</span>
-        <a href='/docs/{index ? index : path}'>{name}</a>
+        <Button href='/docs/{index ? index : path}'>
+          <Label>{name}</Label>
+        </Button>
 			  </span>
 			{#if expanded}
 				{#each children as child}
@@ -32,9 +35,9 @@
 			{/if}
 		{:else if !hidden}
 			<span>
-				<a href='/docs/{path}' class="no-arrow">
-				{name}
-        </a>
+				<Button href='/docs/{path}' class="no-arrow">
+				  <Label>{name}</Label>
+        </Button>
 			</span>
 		{/if}
 	</li>

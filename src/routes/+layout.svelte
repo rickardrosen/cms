@@ -1,11 +1,20 @@
 <script lang="ts">
+  import Fab, { Icon } from '@smui/fab';
+  import Card, {
+    Content,
+    PrimaryAction,
+    Actions,
+    ActionButtons,
+    ActionIcons,
+  } from '@smui/card';
+  import Button, { Label } from '@smui/button';
 	import { page } from "$app/stores";
   import Tree from './Tree.svelte'
   import type { LayoutData } from './$types'
   export let data: LayoutData
   const p = $page.url.pathname.split('/').slice(1)
   const { tree } = data
-console.log("p",$page)
+  console.log("$page from Layout:",$page)
 </script>
 
 <style>
@@ -55,13 +64,26 @@ console.log("p",$page)
   </main>
 
   <aside class="aside nav">
-    <Tree {tree} {p} />
+    <div class="flexy">
+      <div class="margins">
+        <Tree {tree} {p} />
+      </div>
+      <div class="margins">
+        <form action="{$page.url.pathname.replace(/\/[^/]+\/?$/, '')}">
+          <Fab name="add" value="page">
+            <Icon class="material-icons">add</Icon>
+          </Fab>
+        </form>
+      </div>
+    </div>
   </aside>
   <aside class="aside aside-2">
-  <div>
-  <form action="{$page.url.pathname.replace(/\/[^/]+\/?$/, '')}">
-  <button name="add" value="page">Add page</button>
-  </form>
+  <div class="card-display">
+    <div class="card-container">
+    <Card>
+      <Content>A card with action icons.</Content>
+    </Card>
+    </div>
   </div>
   </aside>
   <footer class="footer">Footer</footer>

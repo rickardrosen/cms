@@ -14,7 +14,6 @@ export const load: PageServerLoad = async ({ params, url }) => {
 	if (url.pathname === '/docs') {
 		throw redirect(302, '/');
 	}
-
 	if (url.searchParams.get('add') === 'page') {
 		return;
 	} else {

@@ -1,4 +1,9 @@
 <script lang="ts">
+  import Checkbox from '@smui/checkbox';
+  import FormField from '@smui/form-field';
+  import Paper, { Title, Subtitle, Content } from '@smui/paper';
+  import Button, { Label, Icon } from '@smui/button';
+  import Textfield from '@smui/textfield';
   import type { ActionData, PageData } from './$types'
   import { page } from '$app/stores';
 
@@ -132,26 +137,36 @@
     <label for="name">Filename:</label>
     <input size="60" name="filename" disabled={!addPage} type="text" />
     </div>
-    <div>
-    <label for="title">Title:</label>
-    <input size="60" name="title" type="text" value={frontMatter.title ?? ''} />
+    <div class="margins">
+      <Textfield label="Title" name="title" value={frontMatter.title ?? ''} />
     </div>
-    <span>Tags:</span>
-    {#each availableTags as tag}
-    <input type="checkbox" bind:group={tags} id="{tag}" name="{tag}" value="{tag}" checked="{tags.includes(tag)}">
-    <label for="{tag}">{tag}</label>
-    {/each}
-    <input name="tags" type="hidden" bind:value={tags} />
+    <div>
+      {#each availableTags as tag}
+      <FormField>
+        <Checkbox bind:group={tags} name={tag} id={tag} value={tag} checked={tags.includes(tag)} />
+        <span slot="label">{tag}</span>
+      </FormField>
+      <!-- <input type="checkbox" bind:group={tags} id="{tag}" name="{tag}" value="{tag}" checked="{tags.includes(tag)}">
+      <label for="{tag}">{tag}</label> -->
+      {/each}
+      <input name="tags" type="hidden" bind:value={tags} />
+    </div>
+    <div class="paper-container">
+    <Paper>
     <textarea name="content" bind:this={textArea} />
+    </Paper>
+    </div>
     <input name="sha" type="hidden" bind:value={data.sha} />
     <input name="addPage" type="hidden" bind:value={addPage} />
   </form>
-  <button name="save"  disabled={showCommitModal} on:click="{submitAction}">
-    Save
-  </button>
-  <button name="delete" disabled={showCommitModal} on:click="{submitAction}">
-    Delete
-  </button>
+  <Button name="save"  disabled={showCommitModal} on:click="{submitAction}">
+    <Icon class="material-icons">save</Icon>
+    <Label>Save</Label>
+  </Button>
+  <Button name="delete" disabled={showCommitModal} on:click="{submitAction}">
+    <Icon class="material-icons">delete</Icon>
+    <Label>Delete</Label>
+  </Button>
   {#if showCommitModal}
 	<input type="text" name="commitMessage" form="content" placeholder="Enter commit message..." size="50" bind:value={commitMessage}/>
 	<button type="submit" form="content" formaction="?/{commitAction}" disabled={commitMessage.length === 0}>
