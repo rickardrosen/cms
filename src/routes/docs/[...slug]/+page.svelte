@@ -12,11 +12,11 @@
   let tags
   let showCommitModal = false
   let commitMessage = ''
-  let commitAction: "save" | "delete"
+  let commitAction: "save" | "delete" | "create"
   let currentNode: TreeNode
   let crumbs = []
 	let editor: EasyMDE | null
-  let addPage
+  let addPage: boolean
 
   $: {
 
@@ -53,6 +53,7 @@
     showCommitModal = !showCommitModal
     commitAction = button.target.name
   }
+
 	import { onDestroy, onMount } from 'svelte';
   //import "easymde/src/css/easymde.css"
 	//let showToolbar = true;
@@ -143,8 +144,9 @@
     <input name="tags" type="hidden" bind:value={tags} />
     <textarea name="content" bind:this={textArea} />
     <input name="sha" type="hidden" bind:value={data.sha} />
+    <input name="addPage" type="hidden" bind:value={addPage} />
   </form>
-  <button name="save" disabled={showCommitModal} on:click="{submitAction}">
+  <button name="save"  disabled={showCommitModal} on:click="{submitAction}">
     Save
   </button>
   <button name="delete" disabled={showCommitModal} on:click="{submitAction}">
