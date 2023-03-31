@@ -3,15 +3,15 @@ import type { LayoutServerLoad } from './$types';
 
 interface TreeNode {
 	name: string;
-	type?: string;
+	type: string;
 	path: string;
 	children: TreeNode[];
 	hidden: boolean;
-	index?: string;
+	section: boolean;
 }
 
 /** @type {import('./$types').LayoutServerLoad} */
-export const load: LayoutServerLoad = async ({ url }) => {
+export const load: LayoutServerLoad = async () => {
 	const gitTree = await getTreeByName('docs');
 	const tree: TreeNode = {
 		name: 'docs',
@@ -19,7 +19,7 @@ export const load: LayoutServerLoad = async ({ url }) => {
 		type: 'root',
 		path: '',
 		hidden: false,
-    index:''
+    section: true
 	};
 
 	tree.children = gitTree.reduce((r: TreeNode[], n) => {
@@ -31,8 +31,9 @@ export const load: LayoutServerLoad = async ({ url }) => {
 						name,
 						path: n.path,
 						children: [],
-						type: n.type === 'tree' ? 'folder': 'file',
-						hidden: false
+						type: n.type === 'tree' ? 'folder' : 'file',
+						hidden: false,
+            section: n.type === 'tree' ? true : false
 					})
 				);
 			}
@@ -45,8 +46,9 @@ export const load: LayoutServerLoad = async ({ url }) => {
 		for (let child of t.children) {
 			if (child.name.startsWith('index.md')) {
         //child.type = "folder"
-				child.hidden = true;
-        t.index = child.path
+				child.hidden = true
+        t.path = child.path
+        t.section = true
 			}
 			sectionIndex(child);
 		}

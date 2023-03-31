@@ -15,8 +15,12 @@
   let commitAction: "save" | "delete"
   let currentNode: TreeNode
   let crumbs = []
+	let editor: EasyMDE | null
+  let addPage
 
   $: {
+
+    addPage = $page.url.searchParams.get('add') === 'page'
     tags = frontMatter?.tags ?? []
     editor?.value(data.content ?? '')
     sha = data.sha ?? ''
@@ -53,7 +57,6 @@
   //import "easymde/src/css/easymde.css"
 	//let showToolbar = true;
 	let textArea: HTMLElement | undefined
-	let editor: EasyMDE | null
 	// Setting up the editor and the visible buttons of the toolbar
 	onMount(async () => {
 		const easymde = await import('easymde')
@@ -121,17 +124,16 @@
   <li>{crumb.href}</li>
   {/each}
 </ul>
-{#if currentNode.type === 'folder'}<button name="new">Add page</button>{/if}
 </div>
-<div class="editor" hidden={currentNode.type === 'folder'}>
+<div class="editor" hidden={currentNode.section && !addPage}>
   <form method="post" id="content">
-    <div>
+    <div hidden={!addPage}>
     <label for="name">Filename:</label>
-    <input size="60" name="name" disabled=true type="text" bind:value={currentNode.name} />
+    <input size="60" name="filename" disabled={!addPage} type="text" />
     </div>
     <div>
     <label for="title">Title:</label>
-    <input size="60" name="title" type="text" bind:value={frontMatter.title} />
+    <input size="60" name="title" type="text" value={frontMatter.title ?? ''} />
     </div>
     <span>Tags:</span>
     {#each availableTags as tag}

@@ -5,6 +5,7 @@
   export let data: LayoutData
   const p = $page.url.pathname.split('/').slice(1)
   const { tree } = data
+console.log("p",$page)
 </script>
 
 <style>
@@ -56,6 +57,12 @@
   <aside class="aside nav">
     <Tree {tree} {p} />
   </aside>
-  <aside class="aside aside-2">Aside 2</aside>
+  <aside class="aside aside-2">
+  <div>
+  <form action="{$page.url.pathname.replace(/\/[^/]+\/?$/, '')}">
+  <button name="add" value="page">Add page</button>
+  </form>
+  </div>
+  </aside>
   <footer class="footer">Footer</footer>
 </div>

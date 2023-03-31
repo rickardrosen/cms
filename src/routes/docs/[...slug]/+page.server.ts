@@ -1,4 +1,5 @@
 import { error } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 import {
 	deleteFile,
 	getContent,
@@ -9,7 +10,14 @@ import {
 import type { PageServerLoad, Actions } from './$types';
 import matter from 'gray-matter';
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({params, url}) => {
+  if(url.pathname === '/docs'){
+    throw redirect(302, '/')
+  }
+
+  if(url.searchParams.get('add') === 'page'){
+    return
+  }else{
 	const gitContent = await getContent(params.slug);
 	//if (!gitContent) throw error(404);
 
@@ -17,6 +25,7 @@ export const load: PageServerLoad = async ({ params }) => {
 		const { data, content } = matter(Buffer.from(gitContent.content, 'base64').toString());
 		return { data, content, sha: gitContent.sha };
 	}
+  }
 };
 
 export const actions: Actions = {
@@ -25,8 +34,9 @@ export const actions: Actions = {
 			return {
 				data: {
 					title: x.get('title') as string,
-					tags: x.getAll('tags') as string[]
+					tags: x.getAll('tags') as string[],
 				},
+        filename: x.get('filename') as string,
 				text: x.get('content') as string,
 				message: x.get('commitMessage') as string,
 				sha: x.get('sha') as string
