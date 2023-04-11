@@ -6,6 +6,7 @@
   import Textfield from '@smui/textfield';
   import type { ActionData, PageData } from './$types'
   import { page } from '$app/stores';
+	import EasyMde from '$lib/components/EasyMde.svelte';
 
   export let data: PageData
   export let form: ActionData
@@ -20,14 +21,13 @@
   let commitAction: "save" | "delete" | "create"
   let currentNode: TreeNode
   let crumbs = []
-	let editor: EasyMDE | null
   let addPage: boolean
+  let content: string
 
   $: {
-
+    content = data.content ?? ''
     addPage = $page.url.searchParams.get('add') === 'page'
     tags = frontMatter?.tags ?? []
-    editor?.value(data.content ?? '')
     sha = data.sha ?? ''
     frontMatter = data.data ?? {}
     currentNode = decodeURI($page.url.pathname).split("/").slice(2).reduce((p: TreeNode, c) => {
@@ -58,66 +58,6 @@
     showCommitModal = !showCommitModal
     commitAction = button.target.name
   }
-
-	import { onDestroy, onMount } from 'svelte';
-  //import "easymde/src/css/easymde.css"
-	//let showToolbar = true;
-	let textArea: HTMLElement | undefined
-	// Setting up the editor and the visible buttons of the toolbar
-	onMount(async () => {
-		const easymde = await import('easymde')
-		const EasyMDE = easymde.default;
-		editor = new EasyMDE({
-			element: textArea,
-			autofocus: true,
-			spellChecker: false,
-			nativeSpellcheck: true,
-			theme: 'easymde',
-			autosave: {
-				enabled: true,
-				uniqueId: 'easymde-autosave',
-				delay: 1000
-			},
-			toolbar: [
-				'preview',
-				'|',
-				'bold',
-				'italic',
-				'strikethrough',
-				'|',
-				'heading-bigger',
-				'heading-smaller',
-				'heading-1',
-				'heading-2',
-				'heading-3',
-				'|',
-				'unordered-list',
-				'ordered-list',
-				'|',
-				'code',
-				'image',
-				'link',
-				'quote',
-				'table',
-				'horizontal-rule',
-				'|',
-				'redo',
-				'undo',
-				'guide',
-				'|',
-			],
-			status: ['autosave', 'words'],
-			hideIcons: ['fullscreen', 'side-by-side'],
-		});
-  editor.value(data.content ?? '')
-	});
-	// Resetting the editor when clearing it
-	onDestroy(() => {
-		if (editor) {
-			editor.toTextArea()
-			editor = null
-		}
-	});
 </script>
 
 <svelte:head>
@@ -153,7 +93,7 @@
     </div>
     <div class="paper-container">
     <Paper>
-    <textarea name="content" bind:this={textArea} />
+    <EasyMde {content} />
     </Paper>
     </div>
     <input name="sha" type="hidden" bind:value={data.sha} />
