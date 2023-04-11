@@ -36,6 +36,9 @@
 	"type": "module",
 	"dependencies": {
 		"@octokit/types": "^9.0.0",
+		"@tiptap/core": "^2.0.2",
+		"@tiptap/pm": "^2.0.2",
+		"@tiptap/starter-kit": "^2.0.2",
 		"@types/marked": "^4.0.8",
 		"easymde": "^2.18.0",
 		"gray-matter": "^4.0.3",

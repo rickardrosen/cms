@@ -9,12 +9,11 @@
   } from '@smui/card';
   import Button, { Label } from '@smui/button';
 	import { page } from "$app/stores";
-  import Tree from './Tree.svelte'
+  import Tree from '$lib/components/Tree.svelte'
   import type { LayoutData } from './$types'
   export let data: LayoutData
   const p = $page.url.pathname.split('/').slice(1)
   const { tree } = data
-  console.log("$page from Layout:",$page)
 </script>
 
 <style>
