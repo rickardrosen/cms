@@ -14,6 +14,7 @@
   export let data: LayoutData
   const p = $page.url.pathname.split('/').slice(1)
   const { tree } = data
+console.log($page)
 </script>
 
 <style>
@@ -80,7 +81,7 @@
   <div class="card-display">
     <div class="card-container">
     <Card>
-      <Content>A card with action icons.</Content>
+      <Content>{$page.data.currentNode}</Content>
     </Card>
     </div>
   </div>

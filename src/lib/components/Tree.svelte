@@ -10,7 +10,7 @@
 	//import { slide } from 'svelte/transition'
 	export let tree, p
   const [head, ...tail] = p
-	const {name, path, children, hidden, index } = tree
+	const {name, path, children, hidden } = tree
 
 	let expanded = _expansionState[name] || head === name
 	const toggleExpansion = () => {
@@ -24,7 +24,7 @@
 		{#if children.length}
 			<span on:click={toggleExpansion}>
 				<span class="arrow" class:arrowDown>&#x25b6</span>
-        <Button href='/docs/{index ? index : path}'>
+        <Button href='/docs/{path}'>
           <Label>{name}</Label>
         </Button>
 			  </span>
