@@ -30,18 +30,20 @@ export const load: PageServerLoad = async ({ params, url }) => {
 export const actions: Actions = {
 	save: async ({ request }) => {
 		const { text, data, message, sha, addPage, filename } = await request.formData().then((x) => {
+      console.log(x.getAll('tags'))
 			return {
 				data: {
 					title: x.get('title') as string,
 					tags: x.getAll('tags') as string[]
 				},
 				filename: x.get('filename') as string,
-				addPage: x.get('addPage') as string,
+				addPage: x.get('addPage') as unknown,
 				text: x.get('content') as string,
 				message: x.get('commitMessage') as string,
 				sha: x.get('sha') as string
 			};
 		});
+    console.log(data)
 		const file = matter.stringify(text, data);
 		const content = Buffer.from(file).toString('base64');
 		const commit: Commit = {
@@ -53,9 +55,10 @@ export const actions: Actions = {
 			sha,
 			content
 		};
-		const pathname = new URL(request.url).pathname;
-		const gitPath = pathname.substring(1);
-		const res = await createOrUpdateFile(addPage ? `${gitPath}/${filename}` : gitPath, commit);
+		const path = new URL(request.url).pathname.substring(1);
+		const gitPath = addPage ? `${path}/${filename}` : path
+		return { success: true  };
+		//const res = await createOrUpdateFile(gitPath, commit);
 		if (res.status < 300) {
 			if (addPage) {
 				throw redirect(303, pathname + '/' + filename);

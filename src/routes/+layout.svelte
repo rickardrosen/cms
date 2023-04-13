@@ -14,7 +14,6 @@
   export let data: LayoutData
   const p = $page.url.pathname.split('/').slice(1)
   const { tree } = data
-console.log($page)
 </script>
 
 <style>

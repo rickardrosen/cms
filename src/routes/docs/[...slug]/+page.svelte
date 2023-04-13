@@ -54,9 +54,9 @@
     }, []).slice(1)
   }
 
-  function submitAction(button) {
+  function submitAction(action) {
     showCommitModal = !showCommitModal
-    commitAction = button.target.name
+    commitAction = action
   }
 </script>
 
@@ -83,13 +83,15 @@
     <div>
       {#each availableTags as tag}
       <FormField>
-        <Checkbox bind:group={tags} name={tag} id={tag} value={tag} checked={tags.includes(tag)} />
+        <Checkbox bind:group={tags} name="tags" value={tag} checked={tags.includes(tag)} />
         <span slot="label">{tag}</span>
       </FormField>
       <!-- <input type="checkbox" bind:group={tags} id="{tag}" name="{tag}" value="{tag}" checked="{tags.includes(tag)}">
-      <label for="{tag}">{tag}</label> -->
+      <label for="{tag}">{tag}</label>
       {/each}
       <input name="tags" type="hidden" bind:value={tags} />
+      -->
+      {/each}
     </div>
     <div class="paper-container">
     <Paper>
@@ -97,13 +99,13 @@
     </Paper>
     </div>
     <input name="sha" type="hidden" bind:value={data.sha} />
-    <input name="addPage" type="hidden" bind:value={addPage} />
+    <input name="addPage" type="checkbox" bind:checked={addPage} />
   </form>
-  <Button name="save"  disabled={showCommitModal} on:click="{submitAction}">
+  <Button disabled={showCommitModal} on:click="{() => { commitAction = 'save'; showCommitModal = !showCommitModal}}">
     <Icon class="material-icons">save</Icon>
     <Label>Save</Label>
   </Button>
-  <Button name="delete" disabled={showCommitModal} on:click="{submitAction}">
+  <Button disabled={showCommitModal} on:click="{() => { commitAction = 'delete'; showCommitModal = !showCommitModal}}">
     <Icon class="material-icons">delete</Icon>
     <Label>Delete</Label>
   </Button>
