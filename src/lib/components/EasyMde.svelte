@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
   export let content: string
-	let editor: EasyMDE | null
+	export let editor: EasyMDE | null
 	let textArea: HTMLElement | undefined
 	// Setting up the editor and the visible buttons of the toolbar
   $: {

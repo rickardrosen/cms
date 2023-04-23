@@ -1,5 +1,4 @@
 <script context="module" lang="ts">
-  import Button, { Label, Icon } from '@smui/button';
 	// retain module scoped expansion state for each tree node
 	const _expansionState = {
 		/* treeNodeId: expanded <boolean> */
@@ -8,8 +7,8 @@
 
 <script lang="ts">
 	//import { slide } from 'svelte/transition'
-	export let tree, p
-  const [head, ...tail] = p
+	export let tree, cp
+  const [head, ...tail] = cp
 	const {name, path, children, hidden } = tree
 
 	let expanded = _expansionState[name] || head === name
@@ -24,20 +23,16 @@
 		{#if children.length}
 			<span on:click={toggleExpansion}>
 				<span class="arrow" class:arrowDown>&#x25b6</span>
-        <Button href='/docs/{path}'>
-          <Label>{name}</Label>
-        </Button>
+        <a href='/docs/{path}'>{name}</a>
 			  </span>
 			{#if expanded}
 				{#each children as child}
-					<svelte:self tree={child} p={tail}/>
+					<svelte:self tree={child} cp={tail}/>
 				{/each}
 			{/if}
 		{:else if !hidden}
 			<span>
-				<Button href='/docs/{path}' class="no-arrow">
-				  <Label>{name}</Label>
-        </Button>
+        <a href='/docs/{path}' class="no-arrow">{name}</a>
 			</span>
 		{/if}
 	</li>
