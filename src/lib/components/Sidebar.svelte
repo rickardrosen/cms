@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let open = false
 	import { page } from "$app/stores";
-  import Tree from '$lib/components/Tree.svelte'
+  import Toc from '$lib/components/Toc.svelte'
   import type { LayoutData } from './$types'
   const { tree } = $page.data
   let cp: string
@@ -11,9 +11,9 @@
 </script>
 
 <aside class="z-50 absolute w-full h-full bg-gray-200 border-r-2 shadow-lg" class:open>
-  <div class="fixed top-0">
-	<nav class="p-12 text-xl">
-    <Tree {tree} {cp} />
+  <div class="fixed top-10">
+	<nav class="p-12 text-xs">
+    <Toc {tree} {cp} />
 	</nav>
   </div>
 </aside>

@@ -15,7 +15,7 @@
     <Breadcrumbs />
   </div>
 
-  <div class="inline-flex items-center lg:order-2 justify-center w-10 h-10 overflow-hidden rounded-full bg-gray-600 dark:bg-gray-100">
-      <span class="font-medium text-gray-100 dark:text-gray-300">JL</span>
+  <div class="inline-flex items-center lg:order-2 justify-center w-10 h-10 overflow-hidden rounded-full bg-gray-600">
+      <span class="font-medium text-gray-100">JL</span>
   </div>
 </nav>
