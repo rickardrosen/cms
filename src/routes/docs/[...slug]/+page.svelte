@@ -2,7 +2,6 @@
   import type { ActionData, PageData } from './$types'
   import { page } from '$app/stores';
 	import EasyMde from '$lib/components/EasyMde.svelte';
-
   export let data: PageData
   export let form: ActionData
 
@@ -54,12 +53,6 @@
       </div>
       <input name="sha" type="hidden" bind:value={data.sha} />
     </form>
-    <button disabled={showCommitModal} on:click="{() => { commitAction = 'save'; showCommitModal = !showCommitModal}}">
-      Save
-    </button>
-    <button disabled={showCommitModal} on:click="{() => { commitAction = 'delete'; showCommitModal = !showCommitModal}}">
-      Delete
-    </button>
     {#if showCommitModal}
     <input type="text" name="commitMessage" form="content" placeholder="Enter commit message..." size="50" bind:value={commitMessage}/>
     <button type="submit" form="content" formaction="?/{commitAction}" disabled={commitMessage.length === 0}>
@@ -77,6 +70,7 @@
     {/if}
   </div>
   <aside class="self-start sticky top-20 flex-initial max-w-sm rounded shadow-lg ml-3 p-2 text-gray-600 bg-gray-100">
+
     <h3 class="mb-2 font-semibold">Maintainers</h3>
     <h3 class="mb-2 font-semibold">Last changed</h3>
     <h3 class="mb-2 font-semibold">Tags</h3>
@@ -89,4 +83,10 @@
     {/each}
     </ul>
   </aside>
+    <button disabled={showCommitModal} on:click="{() => { commitAction = 'save'; showCommitModal = !showCommitModal}}">
+      Save
+    </button>
+    <button disabled={showCommitModal} on:click="{() => { commitAction = 'delete'; showCommitModal = !showCommitModal}}">
+      Delete
+    </button>
 </div>
