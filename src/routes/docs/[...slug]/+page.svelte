@@ -35,7 +35,7 @@
     commitAction = action
   }
 </script>
-<div class="flex p-1">
+<div class="flex p-5 max-h-full flex-row">
   <div hidden={currentNode.section && !addPage}>
     <form method="post" id="content">
       <div hidden={!addPage}>
@@ -48,7 +48,7 @@
         <!-- <label for="title" class="block mb-2 text-sm font-medium text-gray-900">Title</label> -->
         <input type="text" id="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" label="Title" name="title" value={frontMatter.title ?? ''} />
       </div>
-      <div class="max-h-screen">
+      <div class="max-w-prose">
         <EasyMde {content} />
       </div>
       <input name="sha" type="hidden" bind:value={data.sha} />
@@ -69,10 +69,11 @@
       <p class="error">{form.error}</p>
     {/if}
   </div>
-  <aside class="self-start sticky top-20 flex-initial max-w-sm rounded shadow-lg ml-3 p-2 text-gray-600 bg-gray-100">
+  <aside class="self-start sticky top-20 max-w-sm rounded shadow-lg ml-3 p-2 text-gray-600 bg-gray-100">
 
     <h3 class="mb-2 font-semibold">Maintainers</h3>
     <h3 class="mb-2 font-semibold">Last changed</h3>
+    {$page.data.lastCommit.name} &lt{$page.data.lastCommit.email}&gt
     <h3 class="mb-2 font-semibold">Tags</h3>
     <ul class="w-48 text-sm font-medium">
     {#each availableTags as tag}

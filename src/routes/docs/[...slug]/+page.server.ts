@@ -3,6 +3,7 @@ import { redirect } from '@sveltejs/kit';
 import {
   deleteFile,
   getContent,
+  getCommits,
   createOrUpdateFile,
   type Commit,
   type CommitMessage
@@ -22,7 +23,12 @@ export const load: PageServerLoad = async ({ params, url }) => {
 
     if ('content' in gitContent) {
       const { data, content } = matter(Buffer.from(gitContent.content, 'base64').toString());
-      return { frontmatter: data, content, sha: gitContent.sha };
+      let lastCommit
+      if(data.updated_by === undefined){
+        const commits = await getCommits(params.slug)
+        lastCommit = commits[0].commit.committer
+      }
+      return { frontmatter: data, content, sha: gitContent.sha, lastCommit };
     }
   }
 };
